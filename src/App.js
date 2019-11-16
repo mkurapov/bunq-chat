@@ -1,73 +1,101 @@
 import React, {Component} from "react";
 import Login from './Login';
 
+const endpoint = 'http://assignment.bunq.com';
+const conversationId = 2232;
+
 class App extends Component {
     constructor() {
         super();
         this.state = {
-            value: '',
+            newMessage: '',
             user: {},
-            users: [],
+            userPossibilities: [],
             isLoggedIn: false,
             messages: [],
+            lastMessageId: 0,
+            conversation: null
         };
     }
 
     componentDidMount() {
-      fetch("http://assignment.bunq.com/users")
+
+      fetch(`${endpoint}/users`)
         .then(res => res.json())
-        .then(res => this.setState({users: res}));
-      
-        const currentUsers = localStorage.getItem('users');
-        console.log(currentUsers);
+        .then(res => { console.log(res); this.setState({userPossibilities: res});  });
 
-        if (!currentUsers) {
-          
-        } else {
-          
-        }       
+      fetch(`${endpoint}/conversation/${conversationId}`)
+        .then(res => res.json())
+        .then(res => { this.setState({conversation: res}) ;console.log(res)});
 
-
-
-        const {endpoint} = this.state;
+      fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=5&offset=0`)
+        .then(res => res.json())
+        .then(res => { this.setState({messages: res}) ;console.log(res)});
     }
 
     componentWillUnmount() {
       
     }
 
+    getMessages() {
+      fetch(`${endpoint}/conversation/${conversationId}/new/${this.state.lastMessageId}`)
+        .then(res => res.json())
+        .then(res => { this.setState({messages: res}) ;console.log(res)});
+    }
+
     handleChange(event) {
       this.setState({value: event.target.value});
     }
   
-    handleSubmit(event) {
-      this.setState(state => {
-        const messages = [...state.messages, state.value];
-        return {
-          messages,
-          value: '',
-        };
-      });
+    onSendMessage(event) {
+      let newMessage = {
+        'message': this.state.newMessage,
+        'senderId': this.state.user.id
+      };
+
+      this.setState({  messages: [...this.state.messages, newMessage] });
+      
       event.preventDefault();
+
+      let url = `${endpoint}/conversation/${conversationId}/message/send`;
+      
+      fetch(url, { 
+        method: 'POST',
+        body: JSON.stringify(newMessage) 
+      }) 
+        .then(res => res.json())
+        .then(msg => {
+          this.setState({ lastMessageId: msg.id });
+        })
+        .then(() => this.getMessages());
     }
 
     renderMessages() {
       return this.state.messages.map((msg, i) => (
-        <li key={i}>{msg}</li>
+        <li key={i}>{msg.message}</li>
+      ));
+    }
+    
+    onSelectUser(newUser) {
+      console.log('selected user: ',newUser);
+      
+      this.setState({
+        user: newUser,
+        isLoggedIn: true
+      });
+
+      // localStorage.setItem('users', JSON.stringify(users));
+    }
+    
+    renderUserSelection() {
+      return this.state.userPossibilities.map((user, i) => (
+        <div key={i} onClick={() => this.onSelectUser(user)}>{user.name}</div>
       ));
     }
 
-    onSelectUser(user) {
-      this.setState({
-        user: user,
-        isLoggedIn: true
-      });
-      console.log(user);
-    }
-
-    renderUsers() {
+    renderActiveUsers() {
       return this.state.users.map((user, i) => (
-        <div key={i} onClick={() => this.onSelectUser(user)}>{user.name}</div>
+        <span key={i}>{user.name}  </span>
       ));
     }
 
@@ -77,14 +105,15 @@ class App extends Component {
         return (
           <div>
 
-          <form onSubmit={ev => this.handleSubmit(ev)}>
+          <form onSubmit={ev => this.onSendMessage(ev)}>
             <label>
-              Essay:
-              <input type="text" value={this.state.value} onChange={ev => this.handleChange(ev)} />
+              Message:
+              <input type="text" value={this.state.newMessage} onChange={ev => this.handleChange(ev)} />
             </label>
             <input type="submit" value="Submit" />
           </form>
-          
+
+           
             { this.renderMessages() }
           </div>
         )
@@ -92,7 +121,7 @@ class App extends Component {
       else {
         return (
           <div>
-          { this.renderUsers() }
+          { this.renderUserSelection() }
           </div>
         );
       }
