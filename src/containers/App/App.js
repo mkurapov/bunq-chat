@@ -1,8 +1,13 @@
 import React, {Component} from "react";
-import Login from './Login';
+import Message from "../../components/Message";
 
 const endpoint = 'http://assignment.bunq.com';
 const conversationId = 2232;
+
+const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
+let userDictionary = {};
+
+export const UserContext = React.createContext();
 
 class App extends Component {
     constructor() {
@@ -21,7 +26,13 @@ class App extends Component {
 
       fetch(`${endpoint}/users`)
         .then(res => res.json())
-        .then(res => { this.setState({userPossibilities: res}); });
+        .then(res => { 
+          res.forEach(u => {
+            userDictionary[u.id] = u.name;
+          });
+          console.log(userDictionary);
+          this.setState({userPossibilities: res}); 
+        });
 
       fetch(`${endpoint}/conversation/${conversationId}`)
         .then(res => res.json())
@@ -105,8 +116,8 @@ class App extends Component {
     onSelectUser(newUser) {
       console.log('selected user: ',newUser);
       this.setState({ user: newUser });
+      this.jumpToBottom();
     }
-    
     
 
     componentWillUnmount() {
@@ -115,14 +126,7 @@ class App extends Component {
 
     renderMessages() {
       if (this.state.messages && this.state.user) {
-        return this.state.messages.map((msg, i) => (
-          <div class="message-wrap">
-            { (msg.senderId == this.state.user.id) ? null : <span class="message__avatar">D</span> }
-            <span className={'message ' + (msg.senderId == this.state.user.id ? 'message--sender' : '' )} key={msg.id}>
-              {msg.message}
-            </span>
-          </div>
-        ));
+        return this.state.messages.map((msg, i) => <Message msg={msg} />);
       }
       return null;
     }
@@ -134,9 +138,12 @@ class App extends Component {
     }
 
     render() {
+return (
 
-      if (this.state.user) {
-        return (
+  <UserContext.Provider value={[userDictionary, this.state.user]}>
+    {
+      this.state.user? 
+         (
           <div class="chat">
 
           <form class="chat__form" onSubmit={ev => this.onSendMessage(ev)}>
@@ -144,20 +151,21 @@ class App extends Component {
             <input class="chat__form__btn"  type="submit" value="Submit" />
           </form>
 
-           
-            { this.renderMessages() }
+          { this.renderMessages() }
            
           </div>
         )
-      }
-      else {
-        return (
+      : 
+         (
           <div>
           { this.renderUserSelection() }
           </div>
-        );
-      }
+        )
     }
+  </UserContext.Provider>
+) 
+    }
+
 }
 
 export default App;
