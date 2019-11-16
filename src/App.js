@@ -28,9 +28,13 @@ class App extends Component {
         .then(res => res.json())
         .then(res => { this.setState({conversation: res}) ;console.log(res)});
 
-      fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=5&offset=0`)
+      fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=99&offset=0`)
         .then(res => res.json())
         .then(res => { this.setState({messages: res}) ;console.log(res)});
+
+      //   setInterval(() => {
+      //     this.getMessages();
+      // }, 3000);
     }
 
     componentWillUnmount() {
@@ -44,7 +48,7 @@ class App extends Component {
     }
 
     handleChange(event) {
-      this.setState({value: event.target.value});
+      this.setState({newMessage: event.target.value});
     }
   
     onSendMessage(event) {
@@ -53,7 +57,11 @@ class App extends Component {
         'senderId': this.state.user.id
       };
 
-      this.setState({  messages: [...this.state.messages, newMessage] });
+      this.setState({newMessage: ''})
+
+      // console.log([...this.state.messages, newMessage]);
+
+      // this.setState({  messages: [...this.state.messages, newMessage] });
       
       event.preventDefault();
 
@@ -65,14 +73,16 @@ class App extends Component {
       }) 
         .then(res => res.json())
         .then(msg => {
-          this.setState({ lastMessageId: msg.id });
+          this.setState({ lastMessageId: msg.id, messages: [...this.state.messages, {
+            ...newMessage, id: msg.id
+          }] });
         })
-        .then(() => this.getMessages());
+        // .then(() => this.getMessages());
     }
 
     renderMessages() {
       return this.state.messages.map((msg, i) => (
-        <li key={i}>{msg.message}</li>
+        <li key={msg.id}>{msg.message}</li>
       ));
     }
     
