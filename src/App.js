@@ -9,9 +9,8 @@ class App extends Component {
         super();
         this.state = {
             newMessage: '',
-            user: {},
+            user: null,
             userPossibilities: [],
-            isLoggedIn: false,
             messages: [],
             lastMessageId: 0,
             conversation: null
@@ -22,32 +21,57 @@ class App extends Component {
 
       fetch(`${endpoint}/users`)
         .then(res => res.json())
-        .then(res => { console.log(res); this.setState({userPossibilities: res});  });
+        .then(res => { this.setState({userPossibilities: res}); });
 
       fetch(`${endpoint}/conversation/${conversationId}`)
         .then(res => res.json())
-        .then(res => { this.setState({conversation: res}) ;console.log(res)});
+        .then(res => { this.setState({conversation: res}) });
 
       fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=99&offset=0`)
         .then(res => res.json())
-        .then(res => { this.setState({messages: res}) ;console.log(res)});
+        .then(res => { 
+          if (res.length > 0) {
+            let sortedMessages = res.sort((a, b) => a.id - b.id );
+            this.setState({messages: sortedMessages, lastMessageId: sortedMessages[sortedMessages.length - 1].id });
+          }
+        });
 
-      //   setInterval(() => {
-      //     this.getMessages();
-      // }, 3000);
+        // this.pollMessages();
     }
 
-    componentWillUnmount() {
-      
+    
+
+
+    pollMessages() {
+      setInterval(() => {
+          this.getMessages();
+      }, 3000);
     }
 
     getMessages() {
-      fetch(`${endpoint}/conversation/${conversationId}/new/${this.state.lastMessageId}`)
+      if (this.state.lastMessageId) {
+        fetch(`${endpoint}/conversation/${conversationId}/new/${this.state.lastMessageId}`)
         .then(res => res.json())
-        .then(res => { this.setState({messages: res}) ;console.log(res)});
+        .then(res => { 
+          console.log(res);
+            if (res.length > 0 && res.length !== this.state.messages.length) {
+              console.log('updating messages');
+              console.log(this.state.messages.length);
+              this.setState({messages: [...this.state.messages, ...res], lastMessageId: res[res.length-1].id }); console.log(res);
+              this.jumpToBottom();
+            }
+          })
+          .catch(() => {
+            console.log("error");
+          });
+      }
     }
 
-    handleChange(event) {
+    jumpToBottom() {
+      window.scrollTo(0,document.body.scrollHeight);
+    }
+
+    onInputChange(event) {
       this.setState({newMessage: event.target.value});
     }
   
@@ -58,10 +82,6 @@ class App extends Component {
       };
 
       this.setState({newMessage: ''})
-
-      // console.log([...this.state.messages, newMessage]);
-
-      // this.setState({  messages: [...this.state.messages, newMessage] });
       
       event.preventDefault();
 
@@ -76,55 +96,57 @@ class App extends Component {
           this.setState({ lastMessageId: msg.id, messages: [...this.state.messages, {
             ...newMessage, id: msg.id
           }] });
+          this.jumpToBottom();
         })
         // .then(() => this.getMessages());
     }
 
-    renderMessages() {
-      return this.state.messages.map((msg, i) => (
-        <li key={msg.id}>{msg.message}</li>
-      ));
-    }
     
     onSelectUser(newUser) {
       console.log('selected user: ',newUser);
-      
-      this.setState({
-        user: newUser,
-        isLoggedIn: true
-      });
-
-      // localStorage.setItem('users', JSON.stringify(users));
+      this.setState({ user: newUser });
     }
     
+    
+
+    componentWillUnmount() {
+      
+    }
+
+    renderMessages() {
+      if (this.state.messages && this.state.user) {
+        return this.state.messages.map((msg, i) => (
+          <div class="message-wrap">
+            { (msg.senderId == this.state.user.id) ? null : <span class="message__avatar">D</span> }
+            <span className={'message ' + (msg.senderId == this.state.user.id ? 'message--sender' : '' )} key={msg.id}>
+              {msg.message}
+            </span>
+          </div>
+        ));
+      }
+      return null;
+    }
+
     renderUserSelection() {
       return this.state.userPossibilities.map((user, i) => (
         <div key={i} onClick={() => this.onSelectUser(user)}>{user.name}</div>
       ));
     }
 
-    renderActiveUsers() {
-      return this.state.users.map((user, i) => (
-        <span key={i}>{user.name}  </span>
-      ));
-    }
-
     render() {
 
-      if (this.state.isLoggedIn) {
+      if (this.state.user) {
         return (
-          <div>
+          <div class="chat">
 
-          <form onSubmit={ev => this.onSendMessage(ev)}>
-            <label>
-              Message:
-              <input type="text" value={this.state.newMessage} onChange={ev => this.handleChange(ev)} />
-            </label>
-            <input type="submit" value="Submit" />
+          <form class="chat__form" onSubmit={ev => this.onSendMessage(ev)}>
+              <input class="chat__form__input" type="text" value={this.state.newMessage} onChange={ev => this.onInputChange(ev)} />
+            <input class="chat__form__btn"  type="submit" value="Submit" />
           </form>
 
            
             { this.renderMessages() }
+           
           </div>
         )
       }
