@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Chat from './Chat';
 import Login from './Login';
 
+// user context allows any children to use values in it, like a global variable
 export const UserContext = React.createContext();
 
 export default function App () {
