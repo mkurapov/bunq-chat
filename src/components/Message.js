@@ -1,13 +1,13 @@
 import React, {Component, useContext} from "react";
-import { UserContext } from '../containers/App/App'
+import { UserContext } from '../contexts/UserContext';
 
 const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
 
 export default function Message(props) {
-    let [ userDictionary, user ] = useContext(UserContext);
+    let user = useContext(UserContext);
     let msg = props.msg;
 
-    let userName = userDictionary[msg.senderId];
+    let userName = 'cat';
     let isOwner = msg.senderId == user.id;
     let userColor = bunqColors[msg.senderId-1];
 

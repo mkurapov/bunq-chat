@@ -1,46 +1,39 @@
-import React, {Component} from "react";
+import React, { useEffect, useState, useContext } from "react";
+// import { UserContext } from '../../contexts/UserContext';
+import { UserContext } from '../../containers/App/App';
 
 const endpoint = 'http://assignment.bunq.com';
 
 const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
 let userDictionary = {};
 
-class Login extends Component {
-    constructor() {
-        super();
-        this.state = {
-            user: null,
-            userPossibilities: [],
-        };
-    }
+function Login() {
+    // static contextType = UserContext;
+    const [ allUsers, setAllUsers ] = useState([]);
+    // console.log('using context, ' , useContext(UserContext));
+    const { user, setUser } = useContext(UserContext);
+    // const { user, setUser } = useContext(UserContext);
 
-    componentDidMount() {
+      // Similar to componentDidMount and componentDidUpdate:
+    useEffect( () => {
       fetch(`${endpoint}/users`)
         .then(res => res.json())
         .then(res => { 
           res.forEach(u => {
             userDictionary[u.id] = u.name;
           });
-          console.log(userDictionary);
-          this.setState({userPossibilities: res}); 
+          setAllUsers(res);
         });
-    }
+    }, []);
 
-    renderUserSelection() {
-      return this.state.userPossibilities.map((user, i) => (
-        <div key={i} onClick={() => this.onSelectUser(user)}>{user.name}</div>
-      ));
-    }
-
-    render() {
-      return (
-
-          <div>
-            { this.renderUserSelection() }
-          </div>
-        ) 
-    }
-
+    return (
+        <div>
+          { allUsers.map((user, i) => (
+              <div key={i} onClick={() => setUser(user)}>{user.name}</div>
+            )) 
+          }
+        </div>
+      );
 }
 
 export default Login;
