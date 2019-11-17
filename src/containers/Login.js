@@ -1,9 +1,6 @@
 import React, { useEffect, useContext } from "react";
-// import { UserContext } from '../../contexts/UserContext';
-import { UserContext } from '../../containers/App/App';
-import { API_ENDPOINT } from "../../vars";
-
-const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
+import { UserContext } from './App';
+import { API_ENDPOINT, BUNQ_COLORS } from "../const";
 
 function Login() {
     const { setUser, allUsers, setAllUsers } = useContext(UserContext);
@@ -17,8 +14,8 @@ function Login() {
     }, []);
 
     function getColorForUser(user) {
-      if (bunqColors[user.id-1]) {
-        return bunqColors[user.id-1];
+      if (BUNQ_COLORS[user.id-1]) {
+        return BUNQ_COLORS[user.id-1];
       } else {
         return 'black';
       }
@@ -38,7 +35,7 @@ function Login() {
           }
         </div>
         <div className="footer">
-          <img className="footer__logo" src={require('../../assets/logo.png')}/>
+          <img className="footer__logo" src={require('../assets/logo.png')}/>
         </div>
       </div>
       );

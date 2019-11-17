@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Chat from '../Chat/Chat';
-import Login from '../Login/Login';
+import Chat from './Chat';
+import Login from './Login';
 
 export const UserContext = React.createContext();
 
