@@ -1,7 +1,7 @@
 {
   "name": "bunq-chat",
   "version": "0.1.0",
-  "homepage": "http://mkurapov.github.io/bunq-chat",
+  "homepage": "https://mkurapov.github.io/bunq-chat",
   "private": true,
   "dependencies": {
     "react": "^16.12.0",
