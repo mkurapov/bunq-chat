@@ -134,3 +134,35 @@ body {
   margin-left: auto;
 }
 
+.login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+}
+
+.login__user {
+  display: inline-block;
+  text-align: center;
+  margin-right: 30px;
+}
+
+.login__name {
+  font-weight: 700;
+  font-size: 30px;
+}
+
+.login__avatar {
+  height: 200px;
+  border: 5px solid transparent;
+  margin-bottom: 30px;
+  background-color: var(--color-orange);
+  width: 200px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.login__avatar:hover {
+  border: 5px solid black;
+}

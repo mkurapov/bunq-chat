@@ -7,10 +7,6 @@ import { UserContext } from '../App/App';
 const endpoint = 'http://assignment.bunq.com';
 const conversationId = 2232;
 
-const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
-let userDictionary = {};
-
-
 function Chat() {
     const [ allUsers, setAllUsers ] = useState([]);
     const [ messages, setMessages ] = useState([]);
@@ -20,17 +16,9 @@ function Chat() {
 
     const { user } = useContext(UserContext);
 
-    
-
     useEffect( () => {
       fetchInitialMessages();
     }, [])
-
-    // function fetchConversation() {
-    //   fetch(`${endpoint}/conversation/${conversationId}`)
-    //     .then(res => res.json())
-    //     .then(res => { setConversation(res) });
-    // }
 
     function fetchInitialMessages() {
       fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=99&offset=0`)
@@ -39,20 +27,14 @@ function Chat() {
           if (res.length > 0) {
             let sortedMessages = res.sort((a, b) => a.id - b.id );
             setLastMessageId(sortedMessages[sortedMessages.length - 1].id);
-            console.log('lmi, ', sortedMessages[sortedMessages.length - 1].id);
-            console.log('lmi, ', lastMessageId);
-            setInterval(() => getMessages(), 3000);
+            setInterval(() => getNewMessages(), 3000);
             setMessages(sortedMessages);
             jumpToBottom();
           }
         });
     }
 
-    function pollMessages() {
-      setInterval(getMessages, 3000);
-    }
-
-    function getMessages() {
+    function getNewMessages() {
       if (lastMessageId) {
         console.log('getting messages');
         fetch(`${endpoint}/conversation/${conversationId}/new/${lastMessageId}`)

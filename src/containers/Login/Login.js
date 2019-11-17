@@ -23,9 +23,12 @@ function Login() {
     }, []);
 
     return (
-        <div>
+        <div class="login">
           { allUsers.map((user, i) => (
-              <div key={i} onClick={() => setUser(user)}>{user.name}</div>
+              <div class="login__user" key={i} onClick={() => setUser(user)}>
+                <div class="login__avatar"></div>
+                <span class="login__name">{user.name}</span>
+              </div>
             )) 
           }
         </div>
