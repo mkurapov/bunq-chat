@@ -8,11 +8,7 @@ const bunqColors = ['#6f42c1', '#007bff', '#28a745', '#dc3545', '#FFC107'];
 let userDictionary = {};
 
 function Login() {
-    // static contextType = UserContext;
-    const [ allUsers, setAllUsers ] = useState([]);
-    // console.log('using context, ' , useContext(UserContext));
-    const { user, setUser } = useContext(UserContext);
-    // const { user, setUser } = useContext(UserContext);
+    const { setUser, allUsers, setAllUsers } = useContext(UserContext);
 
       // Similar to componentDidMount and componentDidUpdate:
     useEffect( () => {
