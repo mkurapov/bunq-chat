@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/bunq-chat/static/css/main.8737e09f.chunk.css",
+    "main.js": "/bunq-chat/static/js/main.6f1ce4eb.chunk.js",
+    "main.js.map": "/bunq-chat/static/js/main.6f1ce4eb.chunk.js.map",
+    "runtime-main.js": "/bunq-chat/static/js/runtime-main.99243b25.js",
+    "runtime-main.js.map": "/bunq-chat/static/js/runtime-main.99243b25.js.map",
+    "static/js/2.6399fef8.chunk.js": "/bunq-chat/static/js/2.6399fef8.chunk.js",
+    "static/js/2.6399fef8.chunk.js.map": "/bunq-chat/static/js/2.6399fef8.chunk.js.map",
+    "index.html": "/bunq-chat/index.html",
+    "precache-manifest.86379663727345690ca91faa0a9f4d9f.js": "/bunq-chat/precache-manifest.86379663727345690ca91faa0a9f4d9f.js",
+    "service-worker.js": "/bunq-chat/service-worker.js",
+    "static/css/main.8737e09f.chunk.css.map": "/bunq-chat/static/css/main.8737e09f.chunk.css.map",
+    "static/media/logo.png": "/bunq-chat/static/media/logo.eb9aa403.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.99243b25.js",
+    "static/js/2.6399fef8.chunk.js",
+    "static/css/main.8737e09f.chunk.css",
+    "static/js/main.6f1ce4eb.chunk.js"
+  ]
+}
