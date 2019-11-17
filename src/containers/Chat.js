@@ -100,7 +100,7 @@ function Chat() {
             </div>
               <div className="chat">
                 <form className="chat__form" onSubmit={ev => onSendMessage(ev)}>
-                    <input className="chat__form__input" type="text" value={ messageValue } onChange={ev => setMessageValue(ev.target.value)} />
+                    <input className="chat__form__input" placeholder="Type your message..." type="text" value={ messageValue } onChange={ev => setMessageValue(ev.target.value)} />
                   <input className="chat__form__btn"  type="submit" value="Submit" />
                 </form>
               { renderMessages() }
