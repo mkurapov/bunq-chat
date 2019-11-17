@@ -3,14 +3,13 @@ import Message from "../../components/Message";
 import { jumpToBottom } from "../../utils";
 
 import { UserContext } from '../App/App';
+import { API_ENDPOINT } from "../../vars";
 
-const endpoint = 'http://assignment.bunq.com';
 const conversationId = 2232;
 
 function Chat() {
-    const [ allUsers, setAllUsers ] = useState([]);
     const [ messages, setMessages ] = useState([]);
-    const [ conversation, setConversation ] = useState(null);
+    // const [ conversation, setConversation ] = useState(null);
     const [ lastMessageId, setLastMessageId ] = useState(0);
     const [ messageValue, setMessageValue ] = useState('');
 
@@ -21,7 +20,7 @@ function Chat() {
     }, [])
 
     function fetchInitialMessages() {
-      fetch(`${endpoint}/conversation/${conversationId}/message/limited?limit=99&offset=0`)
+      fetch(`${API_ENDPOINT}/conversation/${conversationId}/message/limited?limit=99&offset=0`)
         .then(res => res.json())
         .then(res => { 
           if (res.length > 0) {
@@ -36,11 +35,9 @@ function Chat() {
 
     function getNewMessages() {
       if (lastMessageId) {
-        console.log('getting messages');
-        fetch(`${endpoint}/conversation/${conversationId}/new/${lastMessageId}`)
+        fetch(`${API_ENDPOINT}/conversation/${conversationId}/new/${lastMessageId}`)
         .then(res => res.json())
         .then(res => { 
-          console.log(res);
             if (res.length > 0 && res.length !== messages.length) {
               setMessages([...messages, ...res]);
               setLastMessageId(res[res.length-1].id );
@@ -62,10 +59,9 @@ function Chat() {
       };
       
       setMessageValue('');
-      
       event.preventDefault();
     
-      let url = `${endpoint}/conversation/${conversationId}/message/send`;
+      let url = `${API_ENDPOINT}/conversation/${conversationId}/message/send`;
       fetch(url, { 
         method: 'POST',
         body: JSON.stringify(newMessage) 
@@ -89,13 +85,13 @@ function Chat() {
 
       return (
           <React.Fragment>
-            <nav>
-              Dogs
-            </nav>
-              <div class="chat">
-                <form class="chat__form" onSubmit={ev => onSendMessage(ev)}>
-                    <input class="chat__form__input" type="text" value={ messageValue } onChange={ev => setMessageValue(ev.target.value)} />
-                  <input class="chat__form__btn"  type="submit" value="Submit" />
+            <div className="nav">
+              <div>Bunq Chat</div>
+            </div>
+              <div className="chat">
+                <form className="chat__form" onSubmit={ev => onSendMessage(ev)}>
+                    <input className="chat__form__input" type="text" value={ messageValue } onChange={ev => setMessageValue(ev.target.value)} />
+                  <input className="chat__form__btn"  type="submit" value="Submit" />
                 </form>
               { renderMessages() }
               </div>

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import Chat from '../Chat/Chat';
 import Login from '../Login/Login';
 
@@ -10,7 +10,7 @@ export default function App () {
     
     return (
       <UserContext.Provider value={{user, setUser, allUsers, setAllUsers}}>
-          <div class="banner"></div>
+          <div className="banner"></div>
             { user? <Chat/> : <Login/> }
       </UserContext.Provider>
     );
