@@ -1,6 +1,6 @@
 http://bunq-chat-mkurapov.herokuapp.com/
 
-![bunq-chat](bunq-chat.gif)
+![bunq-chat](demo.gif)
 
 
 
