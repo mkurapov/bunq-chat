@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import Message from "../components/Message";
-import { jumpToBottom } from "../utils";
+import { jumpPageToBottom } from "../utils";
 
 import { UserContext } from './App';
 import { API_ENDPOINT, CONVERSATION_ID } from "../const";
@@ -34,7 +34,7 @@ function Chat() {
             if (res.length > 0) {
               setMessages(messages => [...messages, ...res]);
               setLastMessageId(res[res.length-1].id);
-              jumpToBottom();
+              jumpPageToBottom();
             }
           })
           .catch(err => {
@@ -51,7 +51,7 @@ function Chat() {
             let sortedMessages = data.sort((a, b) => a.id - b.id );
             setLastMessageId(sortedMessages[sortedMessages.length - 1].id);
             setMessages(sortedMessages);
-            jumpToBottom();
+            jumpPageToBottom();
         }
       })
       .catch(err => console.error("Error with getting initial messages."));
@@ -81,7 +81,7 @@ function Chat() {
           setMessages([...messages, {
             ...newMessage, id: msg.id
           }]);
-          jumpToBottom();
+          jumpPageToBottom();
         })
         .catch(err => console.error('Error with sending message.'))
     }
