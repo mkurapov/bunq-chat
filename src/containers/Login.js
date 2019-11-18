@@ -10,7 +10,8 @@ function Login() {
         .then(res => res.json())
         .then(res => {
           setAllUsers(res);
-        });
+        })
+        .catch(err => console.error('Cannot get users'));
     }, []);
 
     function getColorForUser(user) {

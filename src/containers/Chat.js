@@ -20,6 +20,8 @@ function Chat() {
     //poll new messages every 3s, and update if new messages arrive
     useEffect( () => {
       let pollingMessages = setInterval(() => getNewMessages(), 3000);
+
+      // return function acts as ComponentWillMount/cleanup
       return () => clearInterval(pollingMessages);
     }, [lastMessageId])
 
@@ -28,14 +30,15 @@ function Chat() {
         fetch(`${API_ENDPOINT}/conversation/${CONVERSATION_ID}/new/${lastMessageId}`)
           .then(res => res.json())
           .then(res => { 
+            console.log('grabbed messages');
             if (res.length > 0) {
-              setMessages(m => [...m, ...res]);
+              setMessages(messages => [...messages, ...res]);
               setLastMessageId(res[res.length-1].id);
               jumpToBottom();
             }
           })
-          .catch(() => {
-            console.error("UNABLE TO GET NEW MESSAGES");
+          .catch(err => {
+            console.error("Error with getting new messages.");
           });
       }
     }
@@ -50,7 +53,8 @@ function Chat() {
             setMessages(sortedMessages);
             jumpToBottom();
         }
-      });
+      })
+      .catch(err => console.error("Error with getting initial messages."));
     }
   
     function onSendMessage(event) {
@@ -79,6 +83,7 @@ function Chat() {
           }]);
           jumpToBottom();
         })
+        .catch(err => console.error('Error with sending message.'))
     }
 
     function renderMessages() {

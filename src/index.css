@@ -1,25 +1,15 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:600,700&display=swap');
+
 :root{ 
-  --font-primary:'Montserrat';
+  --font-primary:'Montserrat', -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
   --color-text:#4A4A4A;
   --color-orange:#fd7e14;
-  --color-border:#CDCDCD;
-  --color-blue:#007bff;
-  --color-red:#dc3545;
-  --color-pink: #e83e8c;
-  --color-yellow: #ffc107;
-  --color-purple: #6610f2;
-  --color-green: #28a745;
-  --color-light-green: #20c997;
-  --color-light-purple: #6f42c1;
-  --color-aqua: #17a2b8;
   --color-grey: #6c757d;
-  --color-dark-grey: #343a40;
-  --color-off-white: #f8f9fa;
 }
 
 body {
   margin: 0;
-  font-family: var(--font-primary),  -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+  font-family: var(--font-primary);
   -webkit-font-smoothing: antialiased;
 }
 
