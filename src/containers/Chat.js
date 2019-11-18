@@ -44,7 +44,7 @@ function Chat() {
     }
 
     function fetchInitialMessages() {
-      fetch(`${API_ENDPOINT}/conversation/${CONVERSATION_ID}/message/limited?limit=10&offset=0`)
+      fetch(`${API_ENDPOINT}/conversation/${CONVERSATION_ID}/message/limited?limit=20&offset=0`)
       .then(res => res.json())
       .then(data => {
         if (data.length > 0) {
@@ -59,7 +59,7 @@ function Chat() {
   
     function onSendMessage(event) {
       event.preventDefault();
-      if (!messageValue) {
+      if (!messageValue || !messageValue.trim()) {
         return;
       }
 
