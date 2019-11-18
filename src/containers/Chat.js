@@ -17,11 +17,12 @@ function Chat() {
       fetchInitialMessages()
     }, [])
 
-    //poll new messages every 3s, and update if new messages arrive
+    // poll new messages every 3s, and update if new messages arrive
+    // this should be a socket implementation
     useEffect( () => {
       let pollingMessages = setInterval(() => getNewMessages(), 3000);
 
-      // return function acts as ComponentWillMount/cleanup
+      // return function acts as ComponentWillUnmount/cleanup
       return () => clearInterval(pollingMessages);
     }, [lastMessageId])
 
